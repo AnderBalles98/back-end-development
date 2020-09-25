@@ -25,7 +25,7 @@ exports.component_update_post = function (req, res) {
     component.tipo = req.body.tipo;
     component.marca = req.body.marca;
     component.frecuencia = req.body.frecuencia
-    component.ubicacion = [req.body.latitud, re.body.longitud];
+    component.ubicacion = [req.body.latitud, req.body.longitud];
     res.redirect('/components');
 }
 
