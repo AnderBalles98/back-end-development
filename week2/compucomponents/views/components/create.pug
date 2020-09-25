@@ -1,0 +1,35 @@
+extends ../layout
+
+block content
+    a(href="/components") Volver
+
+    br
+    br
+    br
+
+    h1 Crear Componente
+
+    br
+    br
+
+    form(action="/components/create", method="post")
+        label(for='id') ID:
+        input#id(type="text" name="id")
+        br
+        label(for='tipo') Tipo:
+        input#tipo(type="text" name="tipo")
+        br
+        label(for='marca') Marca:
+        input#marca(type="text" name="marca")
+        br
+        label(for='frecuencia') Frecuencia:
+        input#frecuencia(type="text" name="frecuencia")
+        br
+        label(for='latitud') Latitud:
+        input#frecuencia(type="text" name="latitud")
+        br
+        label(for='longitud') Longitud:
+        input#frecuencia(type="text" name="longitud")
+        br
+        br
+        input.btn(type="submit", value="CREAR")
