@@ -1,6 +1,18 @@
 var Component = require("../../models/component");
+var Book = require("../../models/book");
+var User = require("../../models/user");
 var mongoose = require("mongoose");
 
+
+function deleteAll(done) {
+    Book.deleteMany({}, function(error, success) {
+        User.deleteMany({}, function(error, success) {
+            Component.deleteMany({}, function(error, success) {
+                done();
+            });
+        });
+    });
+}
 
 describe("Component TEST", function () {
     beforeAll(function (done) {
@@ -14,26 +26,16 @@ describe("Component TEST", function () {
         db.on("error", console.error.bind(console, "Conection error"));
         db.once("open", function () {
             console.log("Conected sucesfully to test database");
-            Component.deleteMany({}, function (erro, success) {
-                if (erro) {
-                    console.log(erro);
-                }
-                done();
-            });
+            deleteAll(done);
         });
     });
 
     afterEach(function (done) {
-        Component.deleteMany({}, function (erro, success) {
-            if (erro) {
-                console.log(erro);
-            }
-            done();
-        });
+        deleteAll(done);
     });
 
     afterAll(function () {
-        mongoose.disconnect();
+        mongoose.connection.close()
     });
 
     describe("Component.createInstance", () => {

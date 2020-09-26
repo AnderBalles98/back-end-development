@@ -1,4 +1,6 @@
 var Component = require("../../models/component");
+var Book = require("../../models/book");
+var User = require("../../models/user");
 var request = require("request");
 var server = require("../../bin/www");
 var mongoose = require("mongoose");
@@ -8,25 +10,37 @@ var baseUrl = "http://localhost:3000/api/components/";
 
 
 function deleteAll(done) {
-    Component.deleteMany({}, function (erro, success) {
-        if (erro) {
-            console.log(erro);
-        }
-        done();
+    Book.deleteMany({}, function(error, success) {
+        User.deleteMany({}, function(error, success) {
+            Component.deleteMany({}, function(error, success) {
+                done();
+            });
+        });
     });
 }
 
 describe("Component API test", function () {
 
     beforeAll(function (done) {
+        if (!server.listening) {
+            server.listen(3000);
+        }
+        var mongoDB = "mongodb://localhost/compucomponents";
+        mongoose.connect(mongoDB, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
         deleteAll(done);
     });
     afterEach(function(done) {
         deleteAll(done);
     });
 
-    afterAll(function() {
-        mongoose.disconnect();
+    afterAll(function(done) {
+        server.close(function () {
+            mongoose.connection.close()
+            done();
+        });
     });
 
     describe("GET Components", () => {

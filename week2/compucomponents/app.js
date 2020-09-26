@@ -8,12 +8,13 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var componentsRouter = require('./routes/components');
 var componentsAPIRouter = require('./routes/api/components');
+var userAPIRouter = require("./routes/api/users");
 
 var app = express();
 
 // connect whit database
 var mongoose = require("mongoose");
-var mongoDB = "mongodb://localhost/test";
+var mongoDB = "mongodb://localhost/compucomponents";
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
@@ -34,6 +35,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/components', componentsRouter);
 app.use('/api/components', componentsAPIRouter);
+app.use("/api/users", userAPIRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
