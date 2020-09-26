@@ -34,8 +34,10 @@ describe("Component TEST", function () {
         deleteAll(done);
     });
 
-    afterAll(function () {
-        mongoose.connection.close()
+    afterAll(function (done) {
+        mongoose.connection.close(function () {
+            done();
+        })
     });
 
     describe("Component.createInstance", () => {

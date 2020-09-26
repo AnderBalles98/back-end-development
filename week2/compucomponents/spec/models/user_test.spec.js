@@ -38,8 +38,10 @@ describe("user test", function() {
         deleteAll(done);
     });
 
-    afterAll(function() {
-        mongoose.connection.close()
+    afterAll(function(done) {
+        mongoose.connection.close(function () {
+            done();
+        })
     }); 
 
     describe("Book a component", function () {

@@ -10,9 +10,9 @@ var baseUrl = "http://localhost:3000/api/components/";
 
 
 function deleteAll(done) {
-    Book.deleteMany({}, function(error, success) {
-        User.deleteMany({}, function(error, success) {
-            Component.deleteMany({}, function(error, success) {
+    Book.deleteMany({}, function (error, success) {
+        User.deleteMany({}, function (error, success) {
+            Component.deleteMany({}, function (error, success) {
                 done();
             });
         });
@@ -22,23 +22,26 @@ function deleteAll(done) {
 describe("Component API test", function () {
 
     beforeAll(function (done) {
-        if (!server.listening) {
-            server.listen(3000);
-        }
         var mongoDB = "mongodb://localhost/compucomponents";
         mongoose.connect(mongoDB, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
-        deleteAll(done);
+
+        const db = mongoose.connection;
+        db.on("error", console.error.bind(console, "Conection error"));
+        db.once("open", function () {
+            console.log("Conected sucesfully to compucomponents database");
+            deleteAll(done);
+        });
     });
-    afterEach(function(done) {
+
+    afterEach(function (done) {
         deleteAll(done);
     });
 
-    afterAll(function(done) {
-        server.close(function () {
-            mongoose.connection.close()
+    afterAll(function (done) {
+        mongoose.connection.close(function () {
             done();
         });
     });
