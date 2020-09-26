@@ -11,6 +11,15 @@ var componentsAPIRouter = require('./routes/api/components');
 
 var app = express();
 
+// connect whit database
+var mongoose = require("mongoose");
+var mongoDB = "mongodb://localhost/test";
+mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.Promise = global.Promise;
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection Error"));
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

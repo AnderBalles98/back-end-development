@@ -12,9 +12,9 @@ block content
     br
     br
 
-    form(action="/components/update/" + component.id, method="post")
-        label(for='id') ID:
-        input#id(type="text" name="id" value=component.id)
+    form(action="/components/update/" + component.code, method="post")
+        label(for='code') Codigo:
+        input#code(type="text" name="code" value=component.code)
         br
         label(for='tipo') Tipo:
         input#tipo(type="text" name="tipo" value=component.tipo)

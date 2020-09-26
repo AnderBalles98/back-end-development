@@ -5,7 +5,7 @@ var componentsController = require('../../controllers/api/componentsControllerAP
 
 router.get('/', componentsController.component_list);
 router.post('/create', componentsController.component_create);
-router.delete('/remove', componentsController.component_remove);
-router.post('/update/:id', componentsController.component_update);
+router.delete('/remove/:code', componentsController.component_remove);
+router.post('/update/:code', componentsController.component_update);
 
 module.exports = router;

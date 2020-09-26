@@ -8,20 +8,23 @@ block content
                 th(scope='col') tipo
                 th(scope='col') marca
                 th(scope='col') frecuencia
+                th(scope='col') ubicacion
+                th(scope='col') Actualizar
+                th(scope='col') Eliminar
         tbody
             each component in components
                 tr
-                    th(scope='row')= component.id
+                    th(scope='row')= component.code
                     td= component.tipo
                     td= component.marca
                     td= component.frecuencia
                     td= component.ubicacion
                     td
-                        a(href="components/update/" + component.id)
+                        a(href="components/update/" + component.code)
                             button.btn ACTUALIZAR
                     td
-                        form.inline(action="components/remove/" + component.id, method="post")
-                            input(type="hidden" name="id" value= component.id)
+                        form.inline(action="components/remove/" + component.code, method="post")
+                            input(type="hidden" name="code" value= component.code)
                             button.btn(type="submit") ELIMINAR
     a(href="/components/create")
         button.btn.btn-primary Nuevo

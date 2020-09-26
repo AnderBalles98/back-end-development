@@ -1,17 +1,50 @@
 var Component = require("../../models/component");
 var request = require("request");
 var server = require("../../bin/www");
+var mongoose = require("mongoose");
+
+var baseUrl = "http://localhost:3000/api/components/";
 
 
-describe("Component API", () => {
+
+function deleteAll(done) {
+    Component.deleteMany({}, function (erro, success) {
+        if (erro) {
+            console.log(erro);
+        }
+        done();
+    });
+}
+
+describe("Component API test", function () {
+
+    beforeAll(function (done) {
+        deleteAll(done);
+    });
+    afterEach(function(done) {
+        deleteAll(done);
+    });
+
+    afterAll(function() {
+        mongoose.disconnect();
+    });
+
     describe("GET Components", () => {
-        it("Status 200", () => {
-            var newComponent = new Component(1, "GPU", "NVIDIA", 1500, [4.6283, -74.267]);
-            Component.add(newComponent);
-            
-            request.get("http://localhost:3000/api/components/", function(error, respose, body) {
-                expect(respose.statusCode).toBe(200);
+        it("Status 200", function (done) {
+            var newComponent = Component.createInstance(1, "GPU", "NVIDIA", 1500, [4.6283, -74.267]);
+            Component.add(newComponent, function (error, success) {
+                // console.log("-----");
+                // console.log(success);
+                // console.log("-----");
+
+                request.get(baseUrl, { json: true }, function (error, response, body) {
+                    expect(response.statusCode).toBe(200);
+                    expect(body.components.length).toBe(1);
+                    // console.log(body);
+                    done();
+                });
             });
+
 
         });
     });
@@ -21,21 +54,70 @@ describe("Component API", () => {
         // se usa en estos casos debido a que es un request asincrónico
         it("Status 200", (done) => {
             var newComponent = {
-                id: 10,
+                code: 10,
                 marca: "AMD",
                 tipo: "CPU",
                 frecuencia: 3.7,
                 latitud: 4.6283,
                 longitud: -74.267
             };
-            request.post("http://localhost:3000/api/components/create", {
+            request.post(baseUrl + "create", {
                 json: true,
                 body: newComponent
-            }, function (error, response, body){
+            }, function (error, response, body) {
+                // console.log(body);
                 expect(response.statusCode).toBe(200);
-                expect(Component.findById(10).frecuencia).toBe(3.7);
-                done();
+                request.get("http://localhost:3000/api/components/", { json: true }, function (error, response, body) {
+                    expect(response.statusCode).toBe(200);
+                    expect(body.components.length).toBe(1);
+                    // console.log(body);
+                    done();
+                });
             });
         });
+    });
+
+    describe("DELETE Component /remove", () => {
+        it("Status 200", (done) => {
+            var newComponent = Component.createInstance(13, "GPU", "NVIDIA", 1500, [4.6283, -74.267]);
+            Component.add(newComponent, function (error, success) {
+                newComponent = Component.createInstance(43, "CPU", "Intel", 3.8, [4.6482838, -74.2479]);
+                Component.add(newComponent, function (error, success) {
+                    request.delete(baseUrl + "remove/43", { json: true }, function (error, response, body) {
+                        expect(response.statusCode).toBe(200);
+                        request.get("http://localhost:3000/api/components/", { json: true }, function (error, response, body) {
+                            expect(response.statusCode).toBe(200);
+                            expect(body.components.length).toBe(1);
+                            // console.log(body);
+                            done();
+                        });
+                    });
+                });
+            });
+        })
+    });
+
+    describe("POST Component /update/:id", () => {
+        it("Status 200", (done) => {
+            var newComponent = Component.createInstance(58, "GPU", "NVIDIA", 1500, [4.6283, -74.267]);
+            Component.add(newComponent, function (error, success) {
+                newComponent = Component.createInstance(25, "CPU", "Intel", 3.8, [4.6482838, -74.2479]);
+                Component.add(newComponent, function (error, success) {
+                    newComponent = Component.createInstance(36, "CPU", "AMD", 3.5, [4.6283, -74.267]);
+                    newComponent = newComponent.toObject();
+                    delete newComponent._id;
+                    request.post(baseUrl + "update/58", { json: true, body: newComponent }, function (error, response, body) {
+                        expect(response.statusCode).toBe(200);
+                        Component.findByCode(newComponent.code, function (error, component) {
+                            var resComponent = component.toObject();
+                            delete resComponent._id;
+                            delete resComponent.__v;
+                            expect(newComponent).toEqual(resComponent);
+                            done();
+                        });
+                    });
+                });
+            });
+        })
     });
 });
