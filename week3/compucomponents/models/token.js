@@ -19,3 +19,12 @@ const tokenSchema = new Schema({
     }
 });
 
+tokenSchema.statics.createInstance = function(userId, token, createAt) {
+    return new this({
+        userId: userId,
+        token: token,
+        createAt: createAt
+    });
+}
+
+module.exports = mongoose.model('Token', tokenSchema);

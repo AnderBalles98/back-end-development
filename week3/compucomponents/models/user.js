@@ -3,6 +3,8 @@ var uniqueValidator = require("mongoose-unique-validator");
 var Book = require("./book");
 var Schema = mongoose.Schema;
 var bcrypt = require("bcrypt");
+var Token = require('./token');
+var mailer = require("nodemailer");
 
 
 const saltRounds = 10;
@@ -73,6 +75,23 @@ userSchema.methods.book = function(componentId, since, until, callback) {
 
 userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
+}
+
+userSchema.methods.sendEmail = function (subject, msg, callback) {
+    var mailOptions = {
+        from: "np-reply@compucomponents.com",
+        to: this.email,
+        subject,
+        text: msg
+    };
+
+    mailer.sendEmail(mailOptions, callback);
+}
+
+userSchema.methods.sendWellcomeEmail = function(callback) {
+    var token = Token.instaceToken(this._id, crypto.randomBytes(16).toString('hex') );
+    var msg = "Hola\n\nPor favor verifique su cuenta\nPara verificar su cuenta haga click en este link: " + 'http://localhost:3000/token/confirmation/' + token.token;
+    this.sendEmail("Verificación de cuenta", msg, callback);
 }
 
 module.exports = mongoose.model("User", userSchema);
