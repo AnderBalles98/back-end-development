@@ -1,7 +1,9 @@
 var mongoose = require("mongoose");
+var uniqueValidator = require("mongoose-unique-validator");
 var Book = require("./book");
 var Schema = mongoose.Schema;
 var bcrypt = require("bcrypt");
+
 
 const saltRounds = 10;
 
@@ -21,7 +23,8 @@ var userSchema = new Schema({
         trim: true,
         required: [true, 'email is required'],
         lowercase: true, // pasa todo a minúscula
-        validate: [validateEmail, 'email invalid']
+        validate: [validateEmail, 'email invalid'],
+        unique: true
     },
     password: {
         type: String,
@@ -33,6 +36,11 @@ var userSchema = new Schema({
         type: Boolean,
         default: false
     }
+});
+
+// requerido para que se cumplan los atributos 'unique'
+userSchema.plugin(uniqueValidator, {
+    message: "{PATH} already exists"
 });
 
 // ejecuta el callback antes del evento insertado por comillas, en este caso 'save'
