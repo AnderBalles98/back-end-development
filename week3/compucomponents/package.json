@@ -1,0 +1,27 @@
+{
+  "name": "compucomponents",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "express": "express",
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www",
+    "test": "jasmine"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "^4.17.1",
+    "http-errors": "~1.6.3",
+    "moment": "^2.29.0",
+    "mongoose": "^5.10.7",
+    "morgan": "~1.9.1",
+    "pug": "2.0.0-beta11"
+  },
+  "devDependencies": {
+    "express-generator": "^4.16.1",
+    "jasmine": "^3.6.1",
+    "nodemon": "^2.0.4",
+    "request": "^2.88.2"
+  }
+}
