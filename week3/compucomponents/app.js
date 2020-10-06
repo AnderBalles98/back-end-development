@@ -20,19 +20,6 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection Error"));
 
-// set NodeMailer
-var mailer = require("nodemailer");
-
-mailer.createTransport({
-  host: 'smtp.ethereal.email',
-  port: 587,
-  auth: {
-      user: 'leonie.harvey92@ethereal.email',
-      pass: 'YArKtGnZVvwcuSxQrW'
-  }
-});
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

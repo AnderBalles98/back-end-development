@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+    table.table
+        thead
+            tr
+                th(scope='col') #
+                th(scope='col') Nombre
+                th(scope='col') Email
+                th(scope='col') Verificado
+                th(scope='col') Actualizar
+                th(scope='col') Eliminar
+        tbody
+            each user in users
+                tr
+                    th(scope='row')= user._id
+                    td= user.nombre
+                    td= user.email
+                    td= user.verify
+                    td
+                        a(href="users/update/" + user._id)
+                            button.btn ACTUALIZAR
+                    td
+                        form.inline(action="users/remove/" + user._id, method="post")
+                            input(type="hidden" name="id" value= user._id)
+                            button.btn(type="submit") ELIMINAR
+    a(href="/users/create")
+        button.btn.btn-primary Nuevo
