@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var componentsRouter = require('./routes/components');
 var componentsAPIRouter = require('./routes/api/components');
 var userAPIRouter = require("./routes/api/users");
+var tokenRouter = require("./routes/token");
 
 var app = express();
 
@@ -35,6 +36,7 @@ app.use('/users', usersRouter);
 app.use('/components', componentsRouter);
 app.use('/api/components', componentsAPIRouter);
 app.use("/api/users", userAPIRouter);
+app.use("/token", tokenRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

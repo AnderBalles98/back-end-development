@@ -11,7 +11,7 @@ var mailer = require("../mailer/mailer");
 const saltRounds = 10;
 
 function validateEmail(email) {
-    const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,8}$/;
     return re.test(email);
 }
 
