@@ -83,7 +83,7 @@ userSchema.methods.sendEmail = function (subject, msg, callback) {
         from: "no-reply@compucomponents.com",
         to: this.email,
         subject,
-        text: msg
+        html: msg
     };
 
     mailer.sendMail(mailOptions, callback);
@@ -93,8 +93,8 @@ userSchema.methods.sendWellcomeEmail = function(callback) {
     var token = Token.createInstance(this._id, crypto.randomBytes(16).toString('hex'));
     token.save();
     console.log("token: " + token);
-    var msg = "Hola\n\nPor favor verifique su cuenta\nPara verificar su cuenta haga click en este link: " + 'http://localhost:3000/token/confirmation/' + token.token;
-    this.sendEmail("Verificación de cuenta", msg, callback);
+    var htmlmsg = "<p>Hola</p><p>Por favor verifique su cuenta</p><p>Para verificar su cuenta haga click <a href='http://localhost:3000/token/confirmation/" + token.token +"' target='blank'>aquí</a></p>";
+    this.sendEmail("Verificación de cuenta", htmlmsg, callback);
 }
 
 module.exports = mongoose.model("User", userSchema);
