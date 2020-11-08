@@ -11,6 +11,8 @@ var componentsAPIRouter = require('./routes/api/components');
 var userAPIRouter = require("./routes/api/users");
 var tokenRouter = require("./routes/token");
 
+var passport = require("./config/passport");
+
 var app = express();
 
 // connect whit database
@@ -29,7 +31,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, './')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -37,6 +39,9 @@ app.use('/components', componentsRouter);
 app.use('/api/components', componentsAPIRouter);
 app.use("/api/users", userAPIRouter);
 app.use("/token", tokenRouter);
+app.get("/login", function(req, res) {
+  res.render("session/login");
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

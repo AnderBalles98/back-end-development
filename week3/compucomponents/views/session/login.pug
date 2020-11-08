@@ -1,0 +1,46 @@
+
+head
+  //Bootstrap
+  link(rel="stylesheet", href="../../node_modules/bootstrap/dist/css/bootstrap.min.css")
+  script(src="../../node_modules/jquery/dist/jquery.min.js")
+  script(src="../../node_modules/popper.js/dist/popper.min.js")
+  script(src="../../node_modules/bootstrap/dist/js/bootstrap.min.js")
+  script(src="../../node_modules/animate.css/animate.min.css")
+  link(rel="stylesheet", href="../../public/stylesheets/util.css")
+  link(rel="stylesheet", href="../../node_modules/hamburgers/dist/hamburgers.min.css")
+  link(rel="stylesheet", href="../../public/stylesheets/select2.css")
+  link(rel="stylesheet", href="../../public/stylesheets/main.css")
+  script(src="../../public/javascripts/main.js")
+  script(src="../../node_modules/jquery/dist/")
+
+body
+  .limiter
+  .container-login100
+    .wrap-login100
+      .login100-pic.js-tilt(data-tilt='')
+        img(src='https://colorlib.com/etc/lf/Login_v1/images/img-01.png' alt='IMG')
+      form.login100-form.validate-form
+        span.login100-form-title
+          | Member Login
+        .wrap-input100.validate-input(data-validate='Valid email is required: ex@abc.xyz')
+          input.input100(type='text' name='email' placeholder='Email')
+          span.focus-input100
+          span.symbol-input100
+            i.fa.fa-envelope(aria-hidden='true')
+        .wrap-input100.validate-input(data-validate='Password is required')
+          input.input100(type='password' name='pass' placeholder='Contraseña')
+          span.focus-input100
+          span.symbol-input100
+            i.fa.fa-lock(aria-hidden='true')
+        .container-login100-form-btn
+          button.login100-form-btn
+            | Iniciar Sesión
+        .text-center.p-t-12
+          span.txt1
+            | Olvidate tu
+          a.txt2(href='#')
+            |  Contraseña?
+        .text-center.p-t-136
+          a.txt2(href='/users/create')
+            | Crea tu nueva cuenta
+            i.fa.fa-long-arrow-right.m-l-5(aria-hidden='true')
