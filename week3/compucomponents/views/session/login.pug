@@ -19,21 +19,21 @@ body
     .wrap-login100
       .login100-pic.js-tilt(data-tilt='')
         img(src='https://colorlib.com/etc/lf/Login_v1/images/img-01.png' alt='IMG')
-      form.login100-form.validate-form
+      form(action="/login" method="post").login100-form.validate-form
         span.login100-form-title
           | Member Login
         .wrap-input100.validate-input(data-validate='Valid email is required: ex@abc.xyz')
-          input.input100(type='text' name='email' placeholder='Email')
+          input.input100(type='email' name='username' placeholder='Email')
           span.focus-input100
           span.symbol-input100
             i.fa.fa-envelope(aria-hidden='true')
         .wrap-input100.validate-input(data-validate='Password is required')
-          input.input100(type='password' name='pass' placeholder='Contraseña')
+          input.input100(type='password' name='password' placeholder='Contraseña')
           span.focus-input100
           span.symbol-input100
             i.fa.fa-lock(aria-hidden='true')
         .container-login100-form-btn
-          button.login100-form-btn
+          button(type="submit").login100-form-btn
             | Iniciar Sesión
         .text-center.p-t-12
           span.txt1
