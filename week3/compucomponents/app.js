@@ -6,6 +6,12 @@ var logger = require('morgan');
 var jwt = require("jsonwebtoken");
 
 
+// models
+const User = require("./models/user");
+const Token = require("./models/token");
+
+
+
 // routers
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -63,8 +69,8 @@ app.use(passport.session());
 app.use('/', indexRouter);
 app.use('/users', authenticate, usersRouter);
 app.use('/components', authenticate, componentsRouter);
-app.use('/api/components', componentsAPIRouter);
-app.use("/api/users", userAPIRouter);
+app.use('/api/components', validateJWT, componentsAPIRouter);
+app.use("/api/users", validateJWT, userAPIRouter);
 app.use("/token", tokenRouter);
 app.use("/api/auth", authRouter);
 app.get("/login", function (req, res) {
@@ -115,14 +121,20 @@ function authenticate(req, res, next) {
 }
 
 function validateJWT(req, res, next) {
-  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+  jwt.verify(req.headers['access-token'], req.app.get('secretKey'), function (err, decoded) {
     if(err) {
       return res.json({status: 'error', message: err.message, data: null});
     }
-    req.body.userId = decoded.id;
-    console.log('jwt verify: ' + decoded);
-
-    next();
+    let userId = decoded.id;
+    User.findById(userId, function(err, user) {
+      if (err) {
+        return res.json({status: 'error', message: err.message, data: null});
+      } else if (!user) {
+        return res.json({status: 'error', message: "user not found", data: null});
+      }
+      console.log(user);
+      return next();
+    });
 
   });
 }
