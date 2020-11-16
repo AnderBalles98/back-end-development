@@ -10,6 +10,7 @@ var componentsRouter = require('./routes/components');
 var componentsAPIRouter = require('./routes/api/components');
 var userAPIRouter = require("./routes/api/users");
 var tokenRouter = require("./routes/token");
+var jwt = require("jsonwebtoken");
 
 var passport = require("./config/passport");
 var session = require("express-session");
@@ -50,17 +51,14 @@ app.use(passport.session());
 
 
 // paths
-app.use('/', indexRouter);
+app.use('/', authenticate, indexRouter);
 app.use('/users', usersRouter);
 app.use('/components', componentsRouter);
 app.use('/api/components', componentsAPIRouter);
 app.use("/api/users", userAPIRouter);
 app.use("/token", tokenRouter);
-app.get("/login", function(req, res) {
-  if (req.isAuthenticated()) {
+app.get("/login", authenticate ,function(req, res) {
     return res.redirect("/"); 
-  }
-  return res.render("session/login");
 });
 app.post("/login", function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
@@ -94,5 +92,25 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+function authenticate(req, res, next) {
+  if (req.isAuthenticated()) {
+    next();
+  }
+  return res.render("session/login");
+}
+
+function validateJWT(req, res, next) {
+  jwt.verify(req.headers['x-access-token'], req.app.get('secretKey'), function (err, decoded) {
+    if(err) {
+      return res.json({status: 'error', message: err.message, data: null});
+    }
+    req.body.userId = decoded.id;
+    console.log('jwt verify: ' + decoded);
+
+    next();
+
+  });
+}
 
 module.exports = app;
