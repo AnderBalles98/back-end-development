@@ -3,20 +3,29 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var jwt = require("jsonwebtoken");
 
+
+// routers
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var componentsRouter = require('./routes/components');
 var componentsAPIRouter = require('./routes/api/components');
 var userAPIRouter = require("./routes/api/users");
 var tokenRouter = require("./routes/token");
-var jwt = require("jsonwebtoken");
+var authRouter = require("./routes/api/auth");
+
+
 
 var passport = require("./config/passport");
 var session = require("express-session");
 
 
 var app = express();
+
+// set app atributes
+app.set('secretKey', 'jwt_pwd_!!223344');
+
 
 // mongoose config
 var mongoose = require("mongoose");
@@ -51,14 +60,19 @@ app.use(passport.session());
 
 
 // paths
-app.use('/', authenticate, indexRouter);
-app.use('/users', usersRouter);
-app.use('/components', componentsRouter);
+app.use('/', indexRouter);
+app.use('/users', authenticate, usersRouter);
+app.use('/components', authenticate, componentsRouter);
 app.use('/api/components', componentsAPIRouter);
 app.use("/api/users", userAPIRouter);
 app.use("/token", tokenRouter);
-app.get("/login", authenticate ,function(req, res) {
-    return res.redirect("/"); 
+app.use("/api/auth", authRouter);
+app.get("/login", function (req, res) {
+  console.log("entra");
+  if (req.isAuthenticated()) {
+    return res.redirect('/');
+  }
+  return res.render("session/login"); 
 });
 app.post("/login", function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
@@ -95,9 +109,9 @@ app.use(function(err, req, res, next) {
 
 function authenticate(req, res, next) {
   if (req.isAuthenticated()) {
-    next();
+    return next();
   }
-  return res.render("session/login");
+  return res.redirect('/login');
 }
 
 function validateJWT(req, res, next) {
